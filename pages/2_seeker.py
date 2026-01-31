@@ -2,7 +2,7 @@ import sys, os
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
 import streamlit as st
-from lib.ai import analyse_seeker
+from lib.ai import analyse_seeker, get_embedding
 from lib.db import aggregated_offices
 from lib.matching import calc_match_score
 
@@ -37,6 +37,7 @@ if st.button("分析開始", type="primary"):
 
     with st.spinner("AIがあなたの価値観を分析中..."):
         person = analyse_seeker(likes, dislikes, prefs)
+        person_emb = get_embedding(person["summary"])
 
     # --- 自分の特性表示 ---
     st.divider()
@@ -52,9 +53,27 @@ if st.button("分析開始", type="primary"):
     st.divider()
     st.subheader("あなたに合いそうな事業所")
 
+    with st.spinner("事業所との相性を計算中..."):
+        # Build office summaries and get embeddings
+        office_texts = []
+        for o in offices:
+            # Reconstruct a summary text from aggregated tags
+            parts = []
+            if o["work_style"]:
+                parts.append("働き方: " + ", ".join(o["work_style"]))
+            if o["communication"]:
+                parts.append("コミュニケーション: " + ", ".join(o["communication"]))
+            if o["evaluation"]:
+                parts.append("評価: " + ", ".join(o["evaluation"]))
+            if o["avoid"]:
+                parts.append("避けたい: " + ", ".join(o["avoid"]))
+            office_texts.append("。".join(parts))
+
+        office_embs = [get_embedding(t) for t in office_texts]
+
     results = []
-    for o in offices:
-        r = calc_match_score(person, o)
+    for o, o_emb in zip(offices, office_embs):
+        r = calc_match_score(person, o, person_embedding=person_emb, office_embedding=o_emb)
         label = o["company_name"]
         if o.get("office_name"):
             label += f"（{o['office_name']}）"
@@ -79,3 +98,5 @@ if st.button("分析開始", type="primary"):
                     st.write("**注意点**")
                     for x in r["risks"]:
                         st.write(f"- {x}")
+                if not r["reasons"] and not r["risks"]:
+                    st.write("タグの直接一致はありませんが、価値観の方向性が近い事業所です。")
