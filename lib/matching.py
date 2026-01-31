@@ -1,4 +1,10 @@
-from lib.ai import get_embedding, cosine_similarity
+def _cosine_similarity(a: list[float], b: list[float]) -> float:
+    dot = sum(x * y for x, y in zip(a, b))
+    norm_a = sum(x * x for x in a) ** 0.5
+    norm_b = sum(x * x for x in b) ** 0.5
+    if norm_a == 0 or norm_b == 0:
+        return 0.0
+    return dot / (norm_a * norm_b)
 
 
 def calc_match_score(person, office, person_embedding=None, office_embedding=None):
@@ -9,7 +15,7 @@ def calc_match_score(person, office, person_embedding=None, office_embedding=Non
     """
     # --- Embedding-based score (main) ---
     if person_embedding is not None and office_embedding is not None:
-        sim = cosine_similarity(person_embedding, office_embedding)
+        sim = _cosine_similarity(person_embedding, office_embedding)
         # cosine similarity typically ranges 0.3-0.9 for related texts
         # normalize to 0-100 scale: map 0.4-0.9 -> 0-100
         score = int(max(0, min(100, (sim - 0.4) / 0.5 * 100)))
