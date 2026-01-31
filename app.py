@@ -143,7 +143,7 @@ prefs = st.text_area("こだわり（譲れないこと）", height=100)
 # ============================
 # 実行
 # ============================
-if st.button("AIで分析してマッチングする", type="primary"):
+if st.button("分析開始", type="primary"):
     if not (likes and dislikes):
         st.warning("好き・嫌いは必須です")
         st.stop()
