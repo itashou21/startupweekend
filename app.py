@@ -137,7 +137,7 @@ def calc_match_score(person, company):
 st.subheader("あなたのことを教えてください")
 
 likes = st.text_area("好きなもの", height=140)
-dislikes = st.text_area("嫌いなもの", height=140)
+dislikes = st.text_area("好きではないこと", height=140)
 prefs = st.text_area("こだわり（譲れないこと）", height=100)
 
 # ============================
