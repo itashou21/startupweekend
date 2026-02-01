@@ -5,9 +5,9 @@ import streamlit as st
 from lib.ai import analyse_office
 from lib.db import insert_office
 
-st.set_page_config(page_title="事業所登録 - Good job", layout="centered")
-st.title("🏢 事業所登録")
-st.caption("あなたの事業所の価値観を登録してください")
+st.set_page_config(page_title="職場登録 - Good job", layout="centered")
+st.title("🏢 職場登録")
+st.caption("あなたの職場の価値観を登録してください")
 
 if not os.getenv("OPENAI_API_KEY"):
     st.error("OPENAI_API_KEY が設定されていません")
@@ -15,7 +15,7 @@ if not os.getenv("OPENAI_API_KEY"):
 
 # --- 基本情報 ---
 st.subheader("基本情報")
-company_name = st.text_input("会社名（法人名）", placeholder="例：株式会社グッドジョブ")
+company_name = st.text_input("会社名（法人名）", placeholder="例：株式会社Good job")
 office_name = st.text_input("事業所名（拠点名・任意）", placeholder="例：大阪本社")
 
 # --- 自由記述 ---
@@ -23,13 +23,13 @@ st.subheader("価値観を教えてください")
 st.markdown("給与や条件ではなく、**日々の働き方や雰囲気**について自由に書いてください。")
 
 personal_likes = st.text_area(
-    "あなた個人として好きなこと",
-    placeholder="例：新しいことに挑戦する、チームで助け合う、一人で集中する時間…",
+    "あなた個人として好きなことを思いつく限り記載ください",
+    placeholder="例：人と話すこと、調べごとをすること、散歩すること…",
     height=120,
 )
 personal_dislikes = st.text_area(
-    "あなた個人として好きではないこと",
-    placeholder="例：細かいルールが多い、急な予定変更、形式的な会議…",
+    "あなた個人として好きではないことを思いつく限り記載ください",
+    placeholder="例：うるさい場所、車を運転すること、強い口調の人…",
     height=120,
 )
 workplace_likes = st.text_area(
@@ -81,4 +81,4 @@ if st.button("AI分析して登録", type="primary"):
         evaluation=profile["evaluation"],
         avoid=profile["avoid"],
     )
-    st.success("事業所を登録しました！")
+    st.success("職場を登録しました！")

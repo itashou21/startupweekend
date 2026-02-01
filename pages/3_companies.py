@@ -4,16 +4,16 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 import streamlit as st
 from lib.db import all_offices, aggregated_offices, delete_office
 
-st.set_page_config(page_title="登録事業所一覧 - Good job", layout="centered")
-st.title("📋 登録事業所一覧")
+st.set_page_config(page_title="登録職場一覧 - Good job", layout="centered")
+st.title("📋 登録職場一覧")
 
 agg = aggregated_offices()
 
 if not agg:
-    st.info("まだ事業所が登録されていません。サイドバーの「事業所登録」から追加してください。")
+    st.info("まだ職場が登録されていません。サイドバーの「職場登録」から追加してください。")
     st.stop()
 
-st.write(f"**{len(agg)}事業所**（合計 {sum(a['response_count'] for a in agg)} 名回答）")
+st.write(f"**{len(agg)}職場**（合計 {sum(a['response_count'] for a in agg)} 名回答）")
 
 for a in agg:
     label = a["company_name"]

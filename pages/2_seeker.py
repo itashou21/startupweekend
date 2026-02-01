@@ -6,9 +6,9 @@ from lib.ai import analyse_seeker, get_embedding
 from lib.db import aggregated_offices
 from lib.matching import calc_match_score
 
-st.set_page_config(page_title="求職者マッチング - Good job", layout="centered")
+st.set_page_config(page_title="求職者マッチングサービス - Good job", layout="centered")
 st.title("🔍 価値観マッチング")
-st.caption("あなたの「好き」「好きではない」から、合う事業所を見つけます")
+st.caption("あなたの「好き」「好きではない」から、合う職場を見つけます！")
 
 if not os.getenv("OPENAI_API_KEY"):
     st.error("OPENAI_API_KEY が設定されていません")
@@ -17,12 +17,12 @@ if not os.getenv("OPENAI_API_KEY"):
 # --- 入力 ---
 st.subheader("あなたのことを教えてください")
 
-likes = st.text_area("好きなこと", height=140,
-                      placeholder="例：チームで何かを作る、自分のペースで働く、新しい技術を試す…")
-dislikes = st.text_area("好きではないこと", height=140,
-                         placeholder="例：意味のない会議、細かい管理、変化のない日々…")
-prefs = st.text_area("こだわり（譲れないこと）", height=100,
-                      placeholder="例：リモートワーク、フラットな関係、成果で評価…")
+likes = st.text_area("好きなことを思いつく限り記載ください", height=140,
+                      placeholder="例：人と話すこと、調べごとをすること、散歩すること…")
+dislikes = st.text_area("好きではないことを思いつく限り記載ください", height=140,
+                         placeholder="例：うるさい場所、車を運転すること、変化のない日々…")
+prefs = st.text_area("こだわり（譲れないこと）を思いつく限り記載ください", height=100,
+                      placeholder="例：リモートワーク、フラットな関係、土日休み")
 
 # --- 分析 & マッチング ---
 if st.button("分析開始", type="primary"):
@@ -32,7 +32,7 @@ if st.button("分析開始", type="primary"):
 
     offices = aggregated_offices()
     if not offices:
-        st.warning("まだ事業所が登録されていません。先に事業所登録を行ってください。")
+        st.warning("まだ職場が登録されていません。先に職場登録を行ってください。")
         st.stop()
 
     with st.spinner("AIがあなたの価値観を分析中..."):
@@ -51,9 +51,9 @@ if st.button("分析開始", type="primary"):
 
     # --- マッチング ---
     st.divider()
-    st.subheader("あなたに合いそうな事業所")
+    st.subheader("あなたに合いそうな職場")
 
-    with st.spinner("事業所との相性を計算中..."):
+    with st.spinner("職場との相性を計算中..."):
         # Build office summaries and get embeddings
         office_texts = []
         for o in offices:
@@ -85,9 +85,9 @@ if st.button("分析開始", type="primary"):
     matched = [r for r in results if r["score"] >= 1]
 
     if not matched:
-        st.info("マッチする事業所が見つかりませんでした。")
+        st.info("マッチする職場が見つかりませんでした。")
     else:
-        st.write(f"**{len(matched)}件**の事業所が見つかりました。")
+        st.write(f"**{len(matched)}件**の職場が見つかりました。")
         for r in matched:
             with st.expander(f"{r['label']}｜相性 {r['score']} 点"):
                 if r["reasons"]:
