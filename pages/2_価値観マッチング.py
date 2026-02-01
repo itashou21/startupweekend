@@ -20,7 +20,7 @@ st.subheader("あなたのことを教えてください")
 likes = st.text_area("好きなことを思いつく限り記載ください", height=140,
                       placeholder="例：人と話すこと、調べごとをすること、散歩すること…")
 dislikes = st.text_area("好きではないことを思いつく限り記載ください", height=140,
-                         placeholder="例：うるさい場所、車を運転すること、変化のない日々…")
+                         placeholder="例：うるさい場所、車を運転すること、強い口調の人…")
 prefs = st.text_area("こだわり（譲れないこと）を思いつく限り記載ください", height=100,
                       placeholder="例：リモートワーク、フラットな関係、土日休み")
 
